@@ -2,6 +2,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import '../models/food.dart';
 import '../models/drink.dart';
+import 'package:project_tugas/models/user.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._init();
@@ -11,7 +12,7 @@ class DatabaseHelper {
 
   Future<Database> get database async {
     if (_database != null) return _database!;
-    _database = await _initDB('kasir.db');
+    _database = await _initDB('kasir_app.db');
     return _database!;
   }
 
@@ -21,45 +22,46 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 1,
+      version: 2,
       onCreate: _createDB,
     );
   }
 
   Future<void> _createDB(Database db, int version) async {
     await db.execute('''
-      CREATE TABLE food (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        price REAL NOT NULL
-      )
-    ''');
+    CREATE TABLE IF NOT EXISTS food (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      price REAL NOT NULL
+    )
+  ''');
 
     await db.execute('''
-      CREATE TABLE drink (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        price REAL NOT NULL
-      )
-    ''');
+    CREATE TABLE IF NOT EXISTS drink (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      price REAL NOT NULL
+    )
+  ''');
 
     await db.execute('''
-      CREATE TABLE users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        fullName TEXT,
-        username TEXT UNIQUE,
-        birthDate TEXT,
-        gender TEXT,
-        password TEXT,
-        address TEXT
-      )
-    ''');
+    CREATE TABLE IF NOT EXISTS users (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      fullName TEXT,
+      username TEXT UNIQUE,
+      birthDate TEXT,
+      gender TEXT,
+      password TEXT,
+      address TEXT
+    )
+  ''');
   }
 
-  // User Registration
-  Future<int> registerUser(Map<String, dynamic> user) async {
-    final db = await database;
-    return await db.insert('users', user);
+  // Menambahkan pengguna baru
+  Future<int> insertUser(User user) async {
+    final db = await instance.database;
+    return await db.insert('users', user.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
   // User Login

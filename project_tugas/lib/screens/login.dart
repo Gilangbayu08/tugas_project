@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/database_helper.dart';
+import '../helpers/database_helper.dart';
 import 'register_screen.dart';
 import 'home_page.dart';
 
@@ -20,8 +20,7 @@ class _LoginScreenState extends State<LoginScreen> {
       final password = _passwordController.text;
 
       // Pengecekan username dan password dengan Database
-      final user = await DatabaseHelper.instance
-          .getUserByUsernamePassword(username, password);
+      final user = await DatabaseHelper.instance.loginUser(username, password);
 
       if (user != null) {
         ScaffoldMessenger.of(context).showSnackBar(

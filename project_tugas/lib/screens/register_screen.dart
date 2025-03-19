@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../models/database_helper.dart';
+import '../helpers/database_helper.dart';
 import '../models/user.dart';
 
 class RegisterScreen extends StatefulWidget {
