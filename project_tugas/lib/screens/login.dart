@@ -13,6 +13,9 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
+  // Variabel untuk mengontrol visibilitas password
+  bool _isPasswordVisible = false;
+
   // Fungsi untuk login
   void _login() async {
     if (_formKey.currentState!.validate()) {
@@ -114,9 +117,24 @@ class _LoginScreenState extends State<LoginScreen> {
                     // Form untuk password
                     TextFormField(
                       controller: _passwordController,
+                      obscureText:
+                          !_isPasswordVisible, // Toggle password visibility
                       decoration: InputDecoration(
                         labelText: 'Password',
                         prefixIcon: Icon(Icons.lock, color: Colors.blue),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _isPasswordVisible
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                            color: Colors.blue,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _isPasswordVisible = !_isPasswordVisible;
+                            });
+                          },
+                        ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -125,7 +143,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           borderSide: BorderSide(color: Colors.blue, width: 2),
                         ),
                       ),
-                      obscureText: true, // Agar password tersembunyi
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Password tidak boleh kosong';
