@@ -20,6 +20,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final List<String> _genders = ['Laki-laki', 'Perempuan'];
   String? _selectedGender;
 
+  // Menambahkan variabel untuk toggle password visibility
+  bool _isPasswordVisible = false;
+
   // Fungsi untuk menampilkan DatePicker
   Future<void> _selectBirthDate(BuildContext context) async {
     DateTime? pickedDate = await showDatePicker(
@@ -221,11 +224,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       icon: Icon(Icons.arrow_drop_down, color: Colors.blue),
                     ),
                     SizedBox(height: 16),
+                    // Password Field with Toggle Visibility
                     TextFormField(
                       controller: _passwordController,
                       decoration: InputDecoration(
                         labelText: 'Password',
                         prefixIcon: Icon(Icons.lock, color: Colors.blue),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _isPasswordVisible
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                            color: Colors.blue,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _isPasswordVisible = !_isPasswordVisible;
+                            });
+                          },
+                        ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -234,7 +251,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           borderSide: BorderSide(color: Colors.blue, width: 2),
                         ),
                       ),
-                      obscureText: true,
+                      obscureText: !_isPasswordVisible, // Toggle visibility
                       validator: (value) =>
                           value!.isEmpty ? 'Password harus diisi' : null,
                     ),
